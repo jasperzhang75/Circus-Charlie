@@ -1,24 +1,37 @@
 let game; // added
 
 const pressedKeys = new Set();
-const startSound = new Audio('./audio/stage1-4.mp3');
-const failureSound = new Audio('./audio/failure.mp3');
-const winSound = new Audio('./audio/win.mp3');
-
-
+const startSound = new Audio("./audio/stage1-4.mp3");
+const failureSound = new Audio("./audio/failure.mp3");
+const winSound = new Audio("./audio/win.mp3");
+const selectSound = new Audio("./audio/select.mp3");
+const jumpSound = new Audio("./audio/jump.mp3");
 startSound.loop = true;
+
 document.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
-    if (!game) {
-      startSound.play();
-      startGame();
-    } else if (!game.gameIsOver) {
-      game.restartGameover();
-      console.log("first")
-      game.startScreen.style.display = "none";
-          game.gameScreen.style.display = "block";
-          game.gameEndScreen.style.display = "none";
-    }
+    selectSound.play()// Add blinking class
+    const startText = document.querySelector("#game-intro p");
+    startText.classList.add("blink"); 
+    setTimeout(() => {
+      if (!game) {
+        startSound.play();
+        startGame();
+      } else if (game.gameIsOver) {
+        game.restartGameover();
+        game.winScreen.style.display = "none";
+        game.startScreen.style.display = "none";
+        game.gameScreen.style.display = "block";
+        game.gameEndScreen.style.display = "none";
+      }
+      else if (game.gameIsWon) {
+        game.restartGameover();
+        game.winScreen.style.display = "none";
+        game.startScreen.style.display = "none";
+        game.gameScreen.style.display = "block";
+        game.gameEndScreen.style.display = "none";
+      }
+    }, 900);
   }
 });
 
@@ -34,7 +47,6 @@ function restartGame() {
 
   game.restartGameover(); // added
 }
-
 
 function handleKeydown(event) {
   const key = event.key;
@@ -73,6 +85,7 @@ function handleKeydown(event) {
 
   if (pressedKeys.has("ArrowUp")) {
     if (!game.player.isJumping) {
+      jumpSound.play();
       game.player.jump();
       game.player.directionX = 0;
       game.lion.directionX = 0;

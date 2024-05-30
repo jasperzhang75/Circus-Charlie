@@ -1,9 +1,13 @@
 class Game {
   constructor() {
     const pressedKeys = new Set();
+    window.addEventListener("keydown", handleKeydown);
+window.addEventListener("keyup", handleKeyup);
+    // const winSound = new Audio("./audio/win.mp3");
     this.startScreen = document.getElementById("game-intro");
     this.gameScreen = document.getElementById("game-screen");
     this.gameEndScreen = document.getElementById("game-end");
+    this.winScreen = document.getElementById("win");
     this.player = new Player(
       this.gameScreen,
       200,
@@ -37,12 +41,14 @@ class Game {
       280,
       "./images/fireCircle2.gif"
     );
-    this.winStage = new WinStage(this.gameScreen,
+    this.winStage = new WinStage(
+      this.gameScreen,
       7500,
       485,
       100,
       83,
-      "./images/finalStage.png")
+      "./images/finalStage.png"
+    );
     // this.meter = new Meter(this.gameScreen, 400, 540, 100, 40, 100);
     this.meters = [];
     this.generateMeters();
@@ -50,9 +56,10 @@ class Game {
     this.obstacles = [this.firePot, this.fireCircle];
     this.height = 552;
     this.width = 1024;
-    
+
     this.lives = 3;
-    this.generateScore()
+    this.generateScore();
+    this.gameIsWon = false;
     this.gameIsOver = false;
     this.gameIntervalId;
     this.gameLoopFrequency = Math.round(1000 / 60); // 60fps
@@ -74,12 +81,10 @@ class Game {
     this.gameIntervalId = setInterval(() => {
       this.gameLoop();
     }, this.gameLoopFrequency);
-
   }
 
-
   gameLoop() {
-    console.log("in the game loop");
+    // console.log("in the game loop");
 
     this.update();
 
@@ -89,13 +94,12 @@ class Game {
     }
   }
 
-
   moveBackground(speed) {
     this.backgroundPositionX += speed;
     this.gameScreen.style.backgroundPositionX = `${this.backgroundPositionX}px`;
   }
   update() {
-    console.log("in the update");
+    // console.log("in the update");
     if (!this.player.isInvincible) {
       this.player.move();
       this.lion.move(this.backgroundScrollSpeed);
@@ -107,7 +111,6 @@ class Game {
       this.checkWin();
     }
     this.fireCircle.move();
-    
   }
 
   updateMeters() {
@@ -116,40 +119,40 @@ class Game {
     }
   }
 
-checkWin(){
-  const lionBox = this.lion.getBoundingBox();
-  const winStageBox = this.winStage.getBoundingBox();
+  checkWin() {
+    const lionBox = this.lion.getBoundingBox();
+    const winStageBox = this.winStage.getBoundingBox();
 
-  if (this.isCollision(lionBox, winStageBox)) {
-    console.log("Player collision detected!");
-    this.handleWin();
+    if (this.isCollision(lionBox, winStageBox)) {
+      console.log("Player collision detected!");
+      this.handleWin();
+    }
   }
-}
 
-handleWin() { 
-  // this.player.changeImage("./images/clownWin-2.gif");
-  // this.lion.changeImage("./images/lionWalk1.png");
-  this.player.isInvincible = true;
-  
-  setTimeout(() => {
-    startSound.pause(); // Stop the start sound
-    startSound.currentTime = 0; // Reset the start sound to the beginning
-    winSound.play(); // Play the win sound
-    this.firePot.left = 0;
-    this.firePot.stop();
-    this.fireCircle.left = 0;
-    this.fireCircle.stop();
-    this.player.top= 365
-    this.lion.top= 435
-    this.lion.left= 7550
-    this.player.left= 7550
-    this.player.changeImage("./images/clownWin-2.gif");
-    this.lion.changeImage("./images/lionWalk1.png");
-    clearInterval(this.gameIntervalId);
-  }, 100);
+  handleWin() {
+    // this.player.changeImage("./images/clownWin-2.gif");
+    // this.lion.changeImage("./images/lionWalk1.png");
+    this.player.isInvincible = true;
 
-
-}
+    setTimeout(() => {
+      startSound.pause(); // Stop the start sound
+      startSound.currentTime = 0; // Reset the start sound to the beginning
+      winSound.play(); // Play the win sound
+      this.gameIsWon = true;
+      this.firePot.left = 0;
+      this.firePot.stop();
+      this.fireCircle.left = 0;
+      this.fireCircle.stop();
+      this.player.top = 365;
+      this.lion.top = 435;
+      this.lion.left = 7550;
+      this.player.left = 7550;
+      this.player.changeImage("./images/clownWin-2.gif");
+      this.lion.changeImage("./images/lionWalk1.png");
+      this.winScreen.style.display = "block";
+      clearInterval(this.gameIntervalId);
+    }, 100);
+  }
 
   checkCollisions() {
     const playerBox = this.player.getBoundingBox();
@@ -215,28 +218,28 @@ handleWin() {
     failureSound.play(); // Play the failure sound
     this.player.isInvincible = true;
     this.lives -= 1;
-   this.updateScore();
+    this.updateScore();
     this.player.changeImage("./images/clownDie-2.png");
     this.lion.changeImage("./images/lionDie-2.png");
-    setTimeout(() => {
-      this.player.isInvincible = false;
-      this.player.changeImage("./images/clownStand.png");
-      this.lion.changeImage("./images/lionWalk1.png");
-      this.restartGame();
-    }, 3200);
-
-    if (this.lives === 0) {
+    if (this.lives) {
+      setTimeout(() => {
+        this.player.isInvincible = false;
+        this.player.changeImage("./images/clownStand.png");
+        this.lion.changeImage("./images/lionWalk1.png");
+        this.restartGame();
+      }, 3200);
+    } else {
       this.gameIsOver = true;
+
       console.log("Game Over!");
-      
+
       setTimeout(() => {
         this.startScreen.style.display = "none";
         this.gameScreen.style.display = "none";
         this.gameEndScreen.style.display = "block";
-        this.restartGameover();
+        // this.restartGameover();
       }, 3200);
     }
-   
   }
 
   restartGame() {
@@ -261,7 +264,6 @@ handleWin() {
     this.lion.updatePosition();
     this.lion.changeImage("./images/lionWalk1.png");
 
-
     this.fireCircle.left = this.gameScreen.offsetWidth;
     this.fireCircle.updatePosition();
 
@@ -274,22 +276,19 @@ handleWin() {
     this.meters.forEach((meter, index) => {
       meter.left = 700 + index * 700;
       meter.updatePosition();
-
-      
-    })
+    });
 
     this.backgroundPositionX = 0;
     this.gameScreen.style.backgroundPositionX = `${this.backgroundPositionX}px`;
 
     this.gameIsOver = false;
     // this.lives -=1; // Reset lives
-    
+
     // Restart game loop
     this.gameIntervalId = setInterval(() => {
       this.gameLoop();
     }, this.gameLoopFrequency);
   }
-
 
   restartGameover() {
     console.log("Restarting game...");
@@ -297,6 +296,7 @@ handleWin() {
 
     // Reset game state
     startSound.play();
+    this.player.isInvincible = false;
     this.player.left = 200;
     this.player.top = 440;
     this.player.directionX = 0;
@@ -305,7 +305,7 @@ handleWin() {
     this.player.updatePosition();
     this.player.changeImage("./images/clownStand.png");
     this.lives = 3; // Reset lives
-    this.updateScore(); 
+    this.updateScore();
     this.lion.left = 180;
     this.lion.top = 505;
     this.lion.directionX = 0;
@@ -313,7 +313,6 @@ handleWin() {
     this.lion.isJumping = false;
     this.lion.updatePosition();
     this.lion.changeImage("./images/lionWalk1.png");
-
 
     this.fireCircle.left = this.gameScreen.offsetWidth;
     this.fireCircle.updatePosition();
@@ -327,16 +326,14 @@ handleWin() {
     this.meters.forEach((meter, index) => {
       meter.left = 700 + index * 700;
       meter.updatePosition();
-
-      
-    })
+    });
 
     this.backgroundPositionX = 0;
     this.gameScreen.style.backgroundPositionX = `${this.backgroundPositionX}px`;
 
     this.gameIsOver = false;
     // this.lives -=1; // Reset lives
-    
+
     // Restart game loop
     this.gameIntervalId = setInterval(() => {
       this.gameLoop();
@@ -360,25 +357,24 @@ handleWin() {
     }
   }
 
-  generateScore(){
+  generateScore() {
     const scoreElement = document.createElement("div");
     scoreElement.id = "score";
-    scoreElement.innerHTML = `Lives left: ${this.lives}`
+    scoreElement.innerHTML = `Lives left: ${this.lives}`;
     scoreElement.style.position = "absolute";
     scoreElement.style.top = "10px";
     scoreElement.style.right = "10px";
     scoreElement.style.top = "43px";
     scoreElement.style.color = "white";
     scoreElement.style.fontSize = "30px";
-    scoreElement.style.textAlign = "center";  
+    scoreElement.style.textAlign = "center";
     scoreElement.style.backgroundColor = "black";
     scoreElement.style.border = "5px solid lightblue";
     scoreElement.style.fontFamily = "ArcadeClassic";
     scoreElement.style.zIndex = "1000";
     scoreElement.style.padding = "5px";
-    
+
     this.gameScreen.appendChild(scoreElement);
-  
   }
 
   updateScore() {
