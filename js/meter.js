@@ -7,8 +7,7 @@ class Meter {
         this.height = height;
         this.distance = distance;
         this.element = document.createElement("p");
-
-this.speed = 0; // Speed of the obstacle
+        this.speed = 0; // Speed of the obstacle
         this.element.textContent = `${this.distance} M`;
         this.element.style.backgroundColor = "black";
         this.element.style.fontSize = "40px";
@@ -22,7 +21,7 @@ this.speed = 0; // Speed of the obstacle
         this.element.style.left = `${left}px`;
         this.element.style.top = `${top}px`;
 
-      this.gameScreen.appendChild(this.element);
+        this.gameScreen.appendChild(this.element);
     }
   
     updatePosition() {
@@ -33,8 +32,6 @@ this.speed = 0; // Speed of the obstacle
   
     move() {
         this.left += this.speed;
-
-       
         this.updatePosition();
     }
 }

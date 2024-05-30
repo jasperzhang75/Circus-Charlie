@@ -2,8 +2,7 @@ class Game {
   constructor() {
     const pressedKeys = new Set();
     window.addEventListener("keydown", handleKeydown);
-window.addEventListener("keyup", handleKeyup);
-    // const winSound = new Audio("./audio/win.mp3");
+    window.addEventListener("keyup", handleKeyup);
     this.startScreen = document.getElementById("game-intro");
     this.gameScreen = document.getElementById("game-screen");
     this.gameEndScreen = document.getElementById("game-end");
@@ -32,7 +31,6 @@ window.addEventListener("keyup", handleKeyup);
       89,
       "./images/firePot-2.gif"
     );
-    //   this.fireCircle=[]
     this.fireCircle = new fireCircle(
       this.gameScreen,
       this.gameScreen.offsetWidth,
@@ -49,14 +47,10 @@ window.addEventListener("keyup", handleKeyup);
       83,
       "./images/finalStage.png"
     );
-    // this.meter = new Meter(this.gameScreen, 400, 540, 100, 40, 100);
     this.meters = [];
     this.generateMeters();
-
-    this.obstacles = [this.firePot, this.fireCircle];
     this.height = 552;
     this.width = 1024;
-
     this.lives = 3;
     this.generateScore();
     this.gameIsWon = false;
@@ -66,6 +60,8 @@ window.addEventListener("keyup", handleKeyup);
     this.backgroundPositionX = 0;
     this.backgroundScrollSpeed = 0;
   }
+
+
   start() {
     // Set the height and width of the game screen
     this.gameScreen.style.height = `${this.height}px`;
@@ -83,6 +79,7 @@ window.addEventListener("keyup", handleKeyup);
     }, this.gameLoopFrequency);
   }
 
+
   gameLoop() {
     // console.log("in the game loop");
 
@@ -98,8 +95,8 @@ window.addEventListener("keyup", handleKeyup);
     this.backgroundPositionX += speed;
     this.gameScreen.style.backgroundPositionX = `${this.backgroundPositionX}px`;
   }
+
   update() {
-    // console.log("in the update");
     if (!this.player.isInvincible) {
       this.player.move();
       this.lion.move(this.backgroundScrollSpeed);
@@ -113,11 +110,13 @@ window.addEventListener("keyup", handleKeyup);
     this.fireCircle.move();
   }
 
+
   updateMeters() {
     for (let meter of this.meters) {
       meter.move();
     }
   }
+
 
   checkWin() {
     const lionBox = this.lion.getBoundingBox();
@@ -129,9 +128,8 @@ window.addEventListener("keyup", handleKeyup);
     }
   }
 
+
   handleWin() {
-    // this.player.changeImage("./images/clownWin-2.gif");
-    // this.lion.changeImage("./images/lionWalk1.png");
     this.player.isInvincible = true;
 
     setTimeout(() => {
@@ -199,6 +197,7 @@ window.addEventListener("keyup", handleKeyup);
     return this.isCollision(rect1, fireCircleTip);
   }
 
+
   isFirePotCollision(rect1, firePotBox) {
     const firePotHalf = {
       left: firePotBox.left + firePotBox.width / 3,
@@ -208,6 +207,7 @@ window.addEventListener("keyup", handleKeyup);
     };
     return this.isCollision(rect1, firePotHalf);
   }
+
 
   handleCollision() {
     if (this.player.isInvincible) {
@@ -241,6 +241,7 @@ window.addEventListener("keyup", handleKeyup);
       }, 3200);
     }
   }
+
 
   restartGame() {
     console.log("Restarting game...");
@@ -332,13 +333,12 @@ window.addEventListener("keyup", handleKeyup);
     this.gameScreen.style.backgroundPositionX = `${this.backgroundPositionX}px`;
 
     this.gameIsOver = false;
-    // this.lives -=1; // Reset lives
-
     // Restart game loop
     this.gameIntervalId = setInterval(() => {
       this.gameLoop();
     }, this.gameLoopFrequency);
   }
+  
   generateMeters() {
     const meterSpacing = 700; // Adjust spacing between meters as needed
     let distance = 100;

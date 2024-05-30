@@ -38,13 +38,11 @@ document.addEventListener("keydown", function (e) {
 function startGame() {
   console.log("start game");
   game = new Game(); // added
-
   game.start(); // added
 }
 
 function restartGame() {
   game = new Game(); // added
-
   game.restartGameover(); // added
 }
 
@@ -99,7 +97,6 @@ function handleKeydown(event) {
 function handleKeyup(event) {
   const key = event.key;
   pressedKeys.delete(key);
-
   // Stop player's and lion's movement when the key is released
   if (!pressedKeys.has("ArrowRight") && !pressedKeys.has("ArrowLeft")) {
     game.player.directionX = 0;

@@ -25,15 +25,13 @@ class Obstacle {
   
     move() {
         this.left += this.speed;
-
-        if (this.left < -this.width ) {
-          
+        if (this.left < -this.width ) { 
             this.left = this.gameScreen.offsetWidth; // Reset position when it goes off screen
         }
         // Update the obstacle's position on the screen
         this.updatePosition();
     }
-    
+
  stop(){
   this.left += -90;
 
@@ -68,13 +66,13 @@ class Obstacle {
     move() {
       // Move the obstacle down by 3px
       this.left += this.speed;
-
       if (this.left < -this.width ) {
           this.left = this.gameScreen.offsetWidth; // Reset position when it goes off screen
       }
       // Update the obstacle's position on the screen
       this.updatePosition();
     }
+
     updatePosition() {
         this.element.style.left = `${this.left}px`;
         this.element.style.top = `${this.top}px`;
@@ -87,7 +85,6 @@ class Obstacle {
      }
 
     getBoundingBox() {
-        
         return this.element.getBoundingClientRect();
     }
     

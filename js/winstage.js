@@ -25,7 +25,6 @@ class WinStage {
   
     move() {
         this.left += this.speed;
-
         // Update the obstacle's position on the screen
         this.updatePosition();
     }

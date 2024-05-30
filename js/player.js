@@ -7,12 +7,10 @@ class Player {
     this.height = height;
     this.directionX = 0;
     this.velocityY = 0;
-
     this.isJumping = false;
     this.gravity = 0.5;
     this.jumpStrength = 15;
     this.element = document.createElement("img");
-
     this.element.src = imgSrc;
     this.element.style.position = "absolute";
     this.element.style.width = `${width}px`;
