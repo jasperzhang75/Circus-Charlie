@@ -1,5 +1,6 @@
 class Game {
   constructor() {
+    const pressedKeys = new Set();
     this.startScreen = document.getElementById("game-intro");
     this.gameScreen = document.getElementById("game-screen");
     this.gameEndScreen = document.getElementById("game-end");
@@ -224,13 +225,15 @@ handleWin() {
       this.restartGame();
     }, 3200);
 
-    if (this.lives <= 0) {
+    if (this.lives === 0) {
       this.gameIsOver = true;
       console.log("Game Over!");
+      
       setTimeout(() => {
         this.startScreen.style.display = "none";
         this.gameScreen.style.display = "none";
         this.gameEndScreen.style.display = "block";
+        this.restartGameover();
       }, 3200);
     }
    
@@ -258,6 +261,7 @@ handleWin() {
     this.lion.updatePosition();
     this.lion.changeImage("./images/lionWalk1.png");
 
+
     this.fireCircle.left = this.gameScreen.offsetWidth;
     this.fireCircle.updatePosition();
 
@@ -270,6 +274,8 @@ handleWin() {
     this.meters.forEach((meter, index) => {
       meter.left = 700 + index * 700;
       meter.updatePosition();
+
+      
     })
 
     this.backgroundPositionX = 0;
@@ -284,6 +290,58 @@ handleWin() {
     }, this.gameLoopFrequency);
   }
 
+
+  restartGameover() {
+    console.log("Restarting game...");
+    clearInterval(this.gameIntervalId);
+
+    // Reset game state
+    startSound.play();
+    this.player.left = 200;
+    this.player.top = 440;
+    this.player.directionX = 0;
+    this.player.velocityY = 0;
+    this.player.isJumping = false;
+    this.player.updatePosition();
+    this.player.changeImage("./images/clownStand.png");
+    this.lives = 3; // Reset lives
+    this.updateScore(); 
+    this.lion.left = 180;
+    this.lion.top = 505;
+    this.lion.directionX = 0;
+    this.lion.velocityY = 0;
+    this.lion.isJumping = false;
+    this.lion.updatePosition();
+    this.lion.changeImage("./images/lionWalk1.png");
+
+
+    this.fireCircle.left = this.gameScreen.offsetWidth;
+    this.fireCircle.updatePosition();
+
+    this.firePot.left = 1050;
+    this.firePot.updatePosition();
+
+    this.winStage.left = 7500;
+    this.winStage.updatePosition();
+
+    this.meters.forEach((meter, index) => {
+      meter.left = 700 + index * 700;
+      meter.updatePosition();
+
+      
+    })
+
+    this.backgroundPositionX = 0;
+    this.gameScreen.style.backgroundPositionX = `${this.backgroundPositionX}px`;
+
+    this.gameIsOver = false;
+    // this.lives -=1; // Reset lives
+    
+    // Restart game loop
+    this.gameIntervalId = setInterval(() => {
+      this.gameLoop();
+    }, this.gameLoopFrequency);
+  }
   generateMeters() {
     const meterSpacing = 700; // Adjust spacing between meters as needed
     let distance = 100;

@@ -16,9 +16,7 @@ body {
   /* animation: 3s linear 1s infinite running slidein; */
 }
 
-#game-end {
-  display: none;
-}
+
 
 .logo-img {
   width: 50%;

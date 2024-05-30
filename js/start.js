@@ -5,13 +5,21 @@ const startSound = new Audio('./audio/stage1-4.mp3');
 const failureSound = new Audio('./audio/failure.mp3');
 const winSound = new Audio('./audio/win.mp3');
 
+
 startSound.loop = true;
 document.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
-    startSound.play();
-    startGame();
+    if (!game) {
+      startSound.play();
+      startGame();
+    } else if (!game.gameIsOver) {
+      game.restartGameover();
+      console.log("first")
+      game.startScreen.style.display = "none";
+          game.gameScreen.style.display = "block";
+          game.gameEndScreen.style.display = "none";
+    }
   }
-  
 });
 
 function startGame() {
@@ -20,6 +28,13 @@ function startGame() {
 
   game.start(); // added
 }
+
+function restartGame() {
+  game = new Game(); // added
+
+  game.restartGameover(); // added
+}
+
 
 function handleKeydown(event) {
   const key = event.key;
