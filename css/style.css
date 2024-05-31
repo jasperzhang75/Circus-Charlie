@@ -116,7 +116,7 @@ body {
 .blink {
   animation: blink 0.15s infinite;
 }
-/* Path: js/main.js */
+
 
 #win {
   display: none;
@@ -125,8 +125,8 @@ body {
 
 #timer {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 43px;
+  left: 20px;
   color: white;
   font-size: 30px;
   text-align: center;
@@ -136,16 +136,4 @@ body {
   z-index: 1000;
   padding: 5px;
 }
-#timer {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  color: white;
-  font-size: 30px;
-  text-align: center;
-  background-color: black;
-  border: 5px solid lightblue;
-  font-family: "ArcadeClassic";
-  z-index: 1000;
-  padding: 5px;
-}
+
