@@ -28,7 +28,7 @@ License
 
 2. Navigate to the project directory:
 
-``` cd circus-charlie ```
+     ``` cd circus-charlie ```
 ## Usage
 
 Open index.html in your browser to start the game.
