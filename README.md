@@ -16,7 +16,7 @@ Credits
 License
 
 ## Features
-
+- Time Constraint: Finish the game in pre-set time frame.
 - Obstacle Interaction: Avoid fire pots and jump through fire circles.
 - Win and Game Over Screens: Dedicated screens for game over and winning scenarios.
 - Sound Effects: Includes background music and sound effects for jumping, winning, and failing.
