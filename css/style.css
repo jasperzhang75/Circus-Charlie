@@ -122,3 +122,30 @@ body {
   display: none;
   max-width: 450px;
 }
+
+#timer {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 30px;
+  text-align: center;
+  background-color: black;
+  border: 5px solid lightblue;
+  font-family: "ArcadeClassic";
+  z-index: 1000;
+  padding: 5px;
+}
+#timer {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 30px;
+  text-align: center;
+  background-color: black;
+  border: 5px solid lightblue;
+  font-family: "ArcadeClassic";
+  z-index: 1000;
+  padding: 5px;
+}

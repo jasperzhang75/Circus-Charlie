@@ -7,6 +7,7 @@ class Game {
     this.gameScreen = document.getElementById("game-screen");
     this.gameEndScreen = document.getElementById("game-end");
     this.winScreen = document.getElementById("win");
+    this.timerElement = document.getElementById("timer");
     this.player = new Player(
       this.gameScreen,
       200,
@@ -56,9 +57,11 @@ class Game {
     this.gameIsWon = false;
     this.gameIsOver = false;
     this.gameIntervalId;
+    this.timerIntervalId= null;
     this.gameLoopFrequency = Math.round(1000 / 60); // 60fps
     this.backgroundPositionX = 0;
     this.backgroundScrollSpeed = 0;
+    this.timeLeft = 60;
   }
 
 
@@ -72,11 +75,13 @@ class Game {
 
     // Show the game screen
     this.gameScreen.style.display = "block";
-
+    this.updateTimerDisplay(); // Add this line
     // Runs the gameLoop on a fequency of 60 times per second. Also stores the ID of the interval.
     this.gameIntervalId = setInterval(() => {
       this.gameLoop();
     }, this.gameLoopFrequency);
+    this.timerIntervalId = setInterval(this.updateTimer.bind(this), 1000); // Add this line
+    startSound.play();
   }
 
 
@@ -88,9 +93,27 @@ class Game {
     // If "gameIsOver" is set to "true" clear the interval to stop the loop
     if (this.gameIsOver) {
       clearInterval(this.gameIntervalId);
+      clearInterval(this.timerIntervalId); // Add this line
+
     }
   }
 
+  updateTimer() {
+    this.timeLeft -= 1;
+    this.updateTimerDisplay();
+    if (this.timeLeft <= 0) {
+      this.handleTimeout();
+    }
+  }
+
+  updateTimerDisplay() {
+    this.timerElement.innerHTML = `Time left: ${this.timeLeft}s`;
+  }
+
+  handleTimeout() {
+    this.gameIsOver = true;
+    this.handleCollision(); // Trigger game over logic
+  }
   moveBackground(speed) {
     this.backgroundPositionX += speed;
     this.gameScreen.style.backgroundPositionX = `${this.backgroundPositionX}px`;
@@ -131,6 +154,7 @@ class Game {
 
   handleWin() {
     this.player.isInvincible = true;
+    clearInterval(this.timerIntervalId); // Add this line
 
     setTimeout(() => {
       startSound.pause(); // Stop the start sound
@@ -230,6 +254,7 @@ class Game {
       }, 3200);
     } else {
       this.gameIsOver = true;
+      clearInterval(this.timerIntervalId); // Add this line
 
       console.log("Game Over!");
 
@@ -246,6 +271,7 @@ class Game {
   restartGame() {
     console.log("Restarting game...");
     clearInterval(this.gameIntervalId);
+    clearInterval(this.timerIntervalId); // Add this line
 
     // Reset game state
     startSound.play();
@@ -256,7 +282,8 @@ class Game {
     this.player.isJumping = false;
     this.player.updatePosition();
     this.player.changeImage("./images/clownStand.png");
-
+    this.timeLeft = 60; // Reset the timer
+    this.updateTimerDisplay();
     this.lion.left = 180;
     this.lion.top = 505;
     this.lion.directionX = 0;
@@ -289,11 +316,14 @@ class Game {
     this.gameIntervalId = setInterval(() => {
       this.gameLoop();
     }, this.gameLoopFrequency);
+    this.timerIntervalId = setInterval(this.updateTimer.bind(this), 1000); // Restart the timer
+
   }
 
   restartGameover() {
     console.log("Restarting game...");
     clearInterval(this.gameIntervalId);
+    clearInterval(this.timerIntervalId); // Add this line
 
     // Reset game state
     startSound.play();
@@ -314,7 +344,8 @@ class Game {
     this.lion.isJumping = false;
     this.lion.updatePosition();
     this.lion.changeImage("./images/lionWalk1.png");
-
+    this.timeLeft = 60; // Reset the timer
+    this.updateTimerDisplay(); // Update the timer display
     this.fireCircle.left = this.gameScreen.offsetWidth;
     this.fireCircle.updatePosition();
 
@@ -337,6 +368,7 @@ class Game {
     this.gameIntervalId = setInterval(() => {
       this.gameLoop();
     }, this.gameLoopFrequency);
+    this.timerIntervalId = setInterval(this.updateTimer.bind(this), 1000); // Restart the timer
   }
   
   generateMeters() {
